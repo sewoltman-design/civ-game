@@ -1,4 +1,4 @@
-const languageModels = [
+export const languageModels = [
   {
     id: 'gpt1',
     name: 'GPT-1',
@@ -107,7 +107,7 @@ const languageModels = [
   },
 ];
 
-const imageModels = [
+export const imageModels = [
   {
     id: 'dalle1',
     name: 'DALL·E',
@@ -154,7 +154,7 @@ const imageModels = [
   },
 ];
 
-const videoModels = [
+export const videoModels = [
   {
     id: 'clipfusion',
     name: 'ClipFusion Video',
@@ -190,7 +190,7 @@ const videoModels = [
   },
 ];
 
-const audioModels = [
+export const audioModels = [
   {
     id: 'whisper',
     name: 'Whisper Universal',
@@ -226,7 +226,7 @@ const audioModels = [
   },
 ];
 
-const worldModels = [
+export const worldModels = [
   {
     id: 'codex',
     name: 'Codex Simulation',
@@ -265,7 +265,7 @@ const worldModels = [
   },
 ];
 
-const computeUpgrades = [
+export const computeUpgrades = [
   {
     id: 'server-cluster',
     name: 'Server Cluster',
@@ -316,7 +316,7 @@ const computeUpgrades = [
   },
 ];
 
-const researchUpgrades = [
+export const researchUpgrades = [
   {
     id: 'auto-sweeps',
     name: 'Automated Hyperparameter Sweeps',
@@ -347,7 +347,7 @@ const researchUpgrades = [
   },
 ];
 
-const revenueUpgrades = [
+export const revenueUpgrades = [
   {
     id: 'api-platform',
     name: 'Unified API Platform',
@@ -385,7 +385,7 @@ const revenueUpgrades = [
   },
 ];
 
-const partnershipUpgrades = [
+export const partnershipUpgrades = [
   {
     id: 'university-network',
     name: 'Global University Network',
@@ -417,7 +417,7 @@ const partnershipUpgrades = [
   },
 ];
 
-const fundingRounds = [
+export const fundingRounds = [
   {
     id: 'seed',
     name: 'Seed Round',
@@ -461,16 +461,3 @@ const fundingRounds = [
     equity: '20% shared governance',
   },
 ];
-
-window.GameData = {
-  languageModels,
-  imageModels,
-  videoModels,
-  audioModels,
-  worldModels,
-  computeUpgrades,
-  researchUpgrades,
-  revenueUpgrades,
-  partnershipUpgrades,
-  fundingRounds,
-};
