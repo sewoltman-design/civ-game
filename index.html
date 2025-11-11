@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Company Growth Simulator</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>AI Company Growth Simulator</h1>
+      <p class="tagline">Grow your AI startup from GPT-1 to post-singularity superintelligence.</p>
+      <div class="controls">
+        <button id="saveBtn">Save</button>
+        <button id="loadBtn">Load</button>
+        <button id="resetBtn">New Game</button>
+      </div>
+      <div class="readme">
+        <h2>How to Play</h2>
+        <p>
+          Use your limited compute and funding to train AI models, unlock infrastructure upgrades, and build profitable
+          AI products. Train models in chronological order to gain new capabilities, invest in compute and partnerships to
+          accelerate research, and balance revenue streams to stay solvent. Reach AGI and ASI tiers by scaling compute with
+          megastructures like Dyson Spheres and Matrioshka Brains. Your progress is saved automatically, and you can use the
+          buttons above to save, load, or start a new company.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <nav>
+        <button data-tab="dashboard" class="active">Dashboard</button>
+        <button data-tab="research">Research</button>
+        <button data-tab="upgrades">Upgrades</button>
+        <button data-tab="finance">Finance</button>
+        <button data-tab="infrastructure">Infrastructure</button>
+      </nav>
+
+      <section id="dashboard" class="tab active">
+        <div class="metrics">
+          <div class="metric"><span>Compute</span><strong id="computeStat"></strong></div>
+          <div class="metric"><span>Model Level</span><strong id="modelStat"></strong></div>
+          <div class="metric"><span>Funding</span><strong id="fundingStat"></strong></div>
+          <div class="metric"><span>Revenue / sec</span><strong id="revenueStat"></strong></div>
+          <div class="metric"><span>Research Speed</span><strong id="researchStat"></strong></div>
+          <div class="metric"><span>Energy Usage</span><strong id="energyStat"></strong></div>
+        </div>
+        <div class="charts">
+          <canvas id="computeChart" width="400" height="180"></canvas>
+          <canvas id="revenueChart" width="400" height="180"></canvas>
+          <canvas id="powerChart" width="400" height="180"></canvas>
+        </div>
+        <div class="news">
+          <h3>News Feed</h3>
+          <ul id="newsFeed"></ul>
+        </div>
+      </section>
+
+      <section id="research" class="tab">
+        <h2>Model Research &amp; Training</h2>
+        <div id="activeResearch"></div>
+        <div class="research-trees" id="researchTrees"></div>
+      </section>
+
+      <section id="upgrades" class="tab">
+        <h2>Strategic Upgrades</h2>
+        <div class="upgrade-group" id="computeUpgrades"></div>
+        <div class="upgrade-group" id="modelUpgrades"></div>
+        <div class="upgrade-group" id="revenueUpgrades"></div>
+        <div class="upgrade-group" id="partnershipUpgrades"></div>
+      </section>
+
+      <section id="finance" class="tab">
+        <h2>Finance &amp; Funding</h2>
+        <div class="finance-panel">
+          <p>Cash on hand: <strong id="cashStat"></strong></p>
+          <p>Operating expenses / sec: <strong id="expenseStat"></strong></p>
+          <div class="funding" id="fundingRounds"></div>
+        </div>
+      </section>
+
+      <section id="infrastructure" class="tab">
+        <h2>Infrastructure Roadmap</h2>
+        <div id="infrastructureList"></div>
+      </section>
+    </main>
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
