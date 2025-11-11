@@ -69,6 +69,15 @@ export class UIController {
       power: new LineChart(root.querySelector('#powerChart'), '#7a8bff'),
     };
     this.bindTabNavigation();
+    this.upgradeButtons = {
+      compute: new Map(),
+      research: new Map(),
+      revenue: new Map(),
+      partnerships: new Map(),
+    };
+    this.fundingButtons = new Map();
+    this.infrastructureCards = new Map();
+
     this.renderUpgrades();
     this.renderFunding();
     this.renderResearchTrees();
@@ -182,68 +191,96 @@ export class UIController {
 
   renderUpgradeGroup(selector, upgrades, type, state) {
     const container = this.root.querySelector(selector);
-    container.innerHTML = `<h3>${type.charAt(0).toUpperCase() + type.slice(1)} Upgrades</h3>`;
-    upgrades.forEach((upgrade) => {
-      const purchased = state?.purchasedUpgrades?.has(upgrade.id) || false;
-      const buttonLabel = purchased ? 'Purchased' : `Acquire (${formatCurrency(upgrade.cost)})`;
-      const button = document.createElement('button');
-      button.className = 'action';
-      button.textContent = buttonLabel;
-      button.disabled = purchased;
-      button.addEventListener('click', () => this.actions.onPurchaseUpgrade(upgrade, type));
+    if (!container.dataset.initialized) {
+      container.innerHTML = `<h3>${type.charAt(0).toUpperCase() + type.slice(1)} Upgrades</h3>`;
+      container.dataset.initialized = 'true';
+    }
 
-      const card = document.createElement('div');
-      card.className = 'upgrade-card';
-      card.innerHTML = `
-        <h4>${upgrade.name}</h4>
-        <p>${upgrade.description}</p>
-        <p>Cost: ${formatCurrency(upgrade.cost)}</p>
-      `;
-      card.appendChild(button);
-      container.appendChild(card);
+    upgrades.forEach((upgrade) => {
+      if (!this.upgradeButtons[type].has(upgrade.id)) {
+        const button = document.createElement('button');
+        button.className = 'action';
+        button.addEventListener('click', () => this.actions.onPurchaseUpgrade(upgrade, type));
+
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+        card.innerHTML = `
+          <h4>${upgrade.name}</h4>
+          <p>${upgrade.description}</p>
+          <p>Cost: ${formatCurrency(upgrade.cost)}</p>
+        `;
+        card.appendChild(button);
+        container.appendChild(card);
+        this.upgradeButtons[type].set(upgrade.id, button);
+      }
+
+      const button = this.upgradeButtons[type].get(upgrade.id);
+      const purchased = state?.purchasedUpgrades?.has(upgrade.id) || false;
+      button.textContent = purchased ? 'Purchased' : `Acquire (${formatCurrency(upgrade.cost)})`;
+      button.disabled = purchased;
     });
   }
 
   renderFunding(state) {
     const container = this.root.querySelector('#fundingRounds');
-    container.innerHTML = '<h3>Funding Rounds</h3>';
+    if (!container.dataset.initialized) {
+      container.innerHTML = '<h3>Funding Rounds</h3>';
+      container.dataset.initialized = 'true';
+    }
+
     fundingRounds.forEach((round) => {
+      if (!this.fundingButtons.has(round.id)) {
+        const button = document.createElement('button');
+        button.className = 'action';
+        button.addEventListener('click', () => this.actions.onRaiseFunding(round));
+
+        const card = document.createElement('div');
+        card.className = 'upgrade-card';
+        card.innerHTML = `
+          <h4>${round.name}</h4>
+          <p>${round.description}</p>
+          <p>Capital: ${formatCurrency(round.amount)} &bull; Terms: ${round.equity}</p>
+        `;
+        card.appendChild(button);
+        container.appendChild(card);
+        this.fundingButtons.set(round.id, button);
+      }
+
+      const button = this.fundingButtons.get(round.id);
       const claimed = state?.fundingClaimed?.has(round.id);
-      const button = document.createElement('button');
-      button.className = 'action';
       button.textContent = claimed ? `Raised ${formatCurrency(round.amount)}` : `Raise ${round.name}`;
       button.disabled = !!claimed;
-      button.addEventListener('click', () => this.actions.onRaiseFunding(round));
-
-      const card = document.createElement('div');
-      card.className = 'upgrade-card';
-      card.innerHTML = `
-        <h4>${round.name}</h4>
-        <p>${round.description}</p>
-        <p>Capital: ${formatCurrency(round.amount)} &bull; Terms: ${round.equity}</p>
-      `;
-      card.appendChild(button);
-      container.appendChild(card);
     });
   }
 
   renderInfrastructure(state) {
     const container = this.root.querySelector('#infrastructureList');
-    container.innerHTML = '';
+    if (!container.dataset.initialized) {
+      container.innerHTML = '';
+      container.dataset.initialized = 'true';
+    }
+
     computeUpgrades.forEach((upgrade) => {
+      if (!this.infrastructureCards.has(upgrade.id)) {
+        const card = document.createElement('div');
+        card.className = 'infrastructure-card';
+        card.innerHTML = `
+          <h3>${upgrade.name}</h3>
+          <p>${upgrade.description}</p>
+          <p>Compute Gain: +${formatNumber(upgrade.computeGain)} &bull; Energy Impact: ${formatNumber(
+            upgrade.energyCost
+          )} MW</p>
+          <p>Cost: ${formatCurrency(upgrade.cost)}</p>
+          <div class="progress-bar"><span></span></div>
+        `;
+        container.appendChild(card);
+        const progress = card.querySelector('.progress-bar span');
+        this.infrastructureCards.set(upgrade.id, progress);
+      }
+
+      const progress = this.infrastructureCards.get(upgrade.id);
       const purchased = state.purchasedUpgrades.has(upgrade.id);
-      const card = document.createElement('div');
-      card.className = 'infrastructure-card';
-      card.innerHTML = `
-        <h3>${upgrade.name}</h3>
-        <p>${upgrade.description}</p>
-        <p>Compute Gain: +${formatNumber(upgrade.computeGain)} &bull; Energy Impact: ${formatNumber(
-        upgrade.energyCost
-      )} MW</p>
-        <p>Cost: ${formatCurrency(upgrade.cost)}</p>
-        <div class="progress-bar"><span style="width: ${purchased ? 100 : 0}%"></span></div>
-      `;
-      container.appendChild(card);
+      progress.style.width = purchased ? '100%' : '0%';
     });
   }
 
