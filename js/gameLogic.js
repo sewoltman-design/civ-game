@@ -52,23 +52,20 @@ export function createDefaultState() {
 
 export function sanitizeState(state) {
   const safeState = createDefaultState();
-  const incoming = state || {};
-  const history = incoming.history || {};
-
   return {
     ...safeState,
-    ...incoming,
-    purchasedUpgrades: new Set(incoming.purchasedUpgrades || []),
-    partnerships: new Set(incoming.partnerships || []),
-    fundingClaimed: new Set(incoming.fundingClaimed || []),
-    unlockedModels: { ...safeState.unlockedModels, ...(incoming.unlockedModels || {}) },
+    ...state,
+    purchasedUpgrades: new Set(state?.purchasedUpgrades || []),
+    partnerships: new Set(state?.partnerships || []),
+    fundingClaimed: new Set(state?.fundingClaimed || []),
+    unlockedModels: { ...safeState.unlockedModels, ...(state?.unlockedModels || {}) },
     history: {
-      timestamps: Array.isArray(history.timestamps) ? [...history.timestamps] : [],
-      compute: Array.isArray(history.compute) ? [...history.compute] : [],
-      revenue: Array.isArray(history.revenue) ? [...history.revenue] : [],
-      aiPower: Array.isArray(history.aiPower) ? [...history.aiPower] : [],
+      timestamps: [...(state?.history?.timestamps || [])],
+      compute: [...(state?.history?.compute || [])],
+      revenue: [...(state?.history?.revenue || [])],
+      aiPower: [...(state?.history?.aiPower || [])],
     },
-    news: Array.isArray(incoming.news) ? [...incoming.news] : [...safeState.news],
+    news: [...(state?.news || safeState.news)],
   };
 }
 
@@ -226,14 +223,14 @@ export function pushNews(state, message) {
 }
 
 export function formatNumber(value) {
-  if (value >= 1000000000) {
-    return `${(value / 1000000000).toFixed(2)}B`;
+  if (value >= 1_000_000_000) {
+    return `${(value / 1_000_000_000).toFixed(2)}B`;
   }
-  if (value >= 1000000) {
-    return `${(value / 1000000).toFixed(2)}M`;
+  if (value >= 1_000_000) {
+    return `${(value / 1_000_000).toFixed(2)}M`;
   }
-  if (value >= 1000) {
-    return `${(value / 1000).toFixed(1)}K`;
+  if (value >= 1_000) {
+    return `${(value / 1_000).toFixed(1)}K`;
   }
   return value.toFixed(0);
 }

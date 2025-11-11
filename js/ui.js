@@ -215,12 +215,7 @@ export class UIController {
       }
 
       const button = this.upgradeButtons[type].get(upgrade.id);
-      const purchased = !!(
-        state &&
-        state.purchasedUpgrades &&
-        typeof state.purchasedUpgrades.has === 'function' &&
-        state.purchasedUpgrades.has(upgrade.id)
-      );
+      const purchased = state?.purchasedUpgrades?.has(upgrade.id) || false;
       button.textContent = purchased ? 'Purchased' : `Acquire (${formatCurrency(upgrade.cost)})`;
       button.disabled = purchased;
     });
@@ -252,12 +247,7 @@ export class UIController {
       }
 
       const button = this.fundingButtons.get(round.id);
-      const claimed = !!(
-        state &&
-        state.fundingClaimed &&
-        typeof state.fundingClaimed.has === 'function' &&
-        state.fundingClaimed.has(round.id)
-      );
+      const claimed = state?.fundingClaimed?.has(round.id);
       button.textContent = claimed ? `Raised ${formatCurrency(round.amount)}` : `Raise ${round.name}`;
       button.disabled = !!claimed;
     });
@@ -311,15 +301,14 @@ export class UIController {
     this.researchButtons.forEach((button) => {
       const category = button.dataset.category;
       const index = Number(button.dataset.index);
-      const lists = {
+      const modelList = {
         language: languageModels,
         image: imageModels,
         video: videoModels,
         audio: audioModels,
         world: worldModels,
-      };
-      const modelList = lists[category];
-      const model = modelList && modelList[index];
+      }[category];
+      const model = modelList?.[index];
       if (!model) return;
       const unlockedCount = state.unlockedModels[category];
       const completed = state.completedModels.includes(model.id);
